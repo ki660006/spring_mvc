@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mappers">
+
+	<select id="selectAllboard"
+	parameterType="com.jeong.org.board.PageDAO"
+		resultType="com.jeong.org.board.boardDTO">
+		select * from board
+		order by board_idx desc
+		limit #{pagenum},#{pagecount}
+	</select>
+	
+	<select id="pagecount" resultType="int">
+		select count(*) from board
+	</select>
+	
+	<select id="boardselect"
+	parameterType="com.jeong.org.board.boardDTO" 
+	resultType="com.jeong.org.board.boardDTO">
+		select * from board
+		where board_idx=#{board_idx}
+	</select>
+	
+	<insert id="insertboard"
+	parameterType="com.jeong.org.board.boardDTO">
+		insert into board
+		values ((select max(a.board_idx)+1 as board_idx from board a),#{board_title},#{board_content},#{read_count},curtime(),#{name})
+	</insert>
+		
+	<update id="updateboard" parameterType="com.jeong.org.board.boardDTO" >
+		update board
+		set board_title=#{board_title}, board_content=#{board_content},
+		name=#{name}, board_writetime=curtime() where board_idx=#{board_idx}
+	</update>
+	
+	<update id="read_cnt" parameterType="com.jeong.org.board.boardDTO" >
+		update board
+		set read_count=(read_count)+1 where board_idx=#{board_idx}
+	</update>
+	
+	<delete id="deleteboard" parameterType="com.jeong.org.board.boardDTO">
+		DELETE FROM BOARD 
+		WHERE board_idx=#{board_idx}
+	</delete>
+	
+	
+</mapper>
